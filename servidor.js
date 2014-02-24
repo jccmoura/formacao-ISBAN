@@ -22,8 +22,12 @@ function lista(req, res) {
     fs.readFile('public/shortens.txt', function (err, data) {
         if (err) throw err;
         shortens = JSON.parse(data);
-        console.log(shortens);
-        res.send(shortens);
+        var rs = [];
+        for (var shorten in shortens){
+            rs.push(shortens[shorten]);
+        }
+        console.log(rs);
+        res.send(rs);
     });
 }
 //*******************************************************************************
@@ -33,7 +37,7 @@ server.post('/', cria);
 
 function cria(req, res) {
     console.log('cria');
-    var s = fs.ReadStream('public/shortens.txt');
+    var s = fs.ReadStream('public/shortens.txt');                                       //lê DB
     fs.readFile('public/shortens.txt', function (err, data) {
         if (err) throw err;
         shortens = JSON.parse(data);
@@ -48,8 +52,7 @@ function cria(req, res) {
             console.log(shortens[hash]);
             var reg = JSON.stringify(shortens);
             
-            console.log(reg);
-            fs.writeFile('public/shortens.txt', reg, function (err) {
+            fs.writeFile('public/shortens.txt', reg, function (err) {                       //escreve DB
                 if (err) throw err;
                 console.log('Registo Adicionado');
             });
@@ -60,5 +63,26 @@ function cria(req, res) {
         }
         });
 }
+//*******************************************************************************
+//                                        Redirect
+//*******************************************************************************
+server.get('/:shrt', red);
+function red(req, res) {
+    var shrt = req.params['shrt'];
+    var s = fs.ReadStream('public/shortens.txt');
+    fs.readFile('public/shortens.txt', function (err, data) {              //lê DB
+        if (err) throw err;
+        shortens = JSON.parse(data);
+        var reg = shortens[shrt];
+        res.redirect('http://' + reg.url);
+	shortens[shrt].count++;
+        var reg = JSON.stringify(shortens);
+        fs.writeFile('public/shortens.txt', reg, function (err) {           //escreve DB
+                if (err) throw err;
+                console.log('Redirect feito');
+        });
+    });
+}
+
 
 server.listen(8000);
