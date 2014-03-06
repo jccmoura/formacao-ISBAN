@@ -1,1 +1,1 @@
-{"JWFZtq":{"id":"JWFZtq","url":"www.google.pt","count":0},"64PhHu":{"id":"64PhHu","url":"www.google.es","count":3},"2LmfaL":{"id":"2LmfaL","url":"www.google.com","count":0}}
+{"JWFZtq":{"id":"JWFZtq","url":"www.google.pt","count":1},"SMTtkA":{"id":"SMTtkA","url":"www.dn.pt","count":0},"64PhHu":{"id":"64PhHu","url":"www.google.es","count":0}}
