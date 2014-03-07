@@ -53,6 +53,7 @@ function cria(req, res) {
         
         var url = req.body.url;
         var hash = crypto.createHash('sha1').update(url).digest('base64').replace(/[=+/]/g, '').slice(0, 6);
+        console.log('Valor URL : ', url);
         
         if (!shortens[hash]) {
             console.log('Novo link');
