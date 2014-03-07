@@ -70,7 +70,7 @@ function cria(req, res) {
             console.log(shortens[hash].id, ' - ', shortens[hash].url);
             console.log('link ja shortado');
         }
-        ee.emit('addShorten', shortens[hash]);
+        ee.emit('addShorten', shortens);
         res.send(shortens[hash].id);    
         });
 }
@@ -89,8 +89,13 @@ function red(req, res) {
 	shortens[shrt].count++;
         var regs = JSON.stringify(shortens);                                     //JSON para String
         fs.writeFile('public/shortens.txt', regs, function (err) {           //escreve DB
-                if (err) throw err;
-                console.log('Redirect feito');
+            if (err) throw err;
+            console.log('Redirect feito');
+            var rs = [];
+            for (var shorten in shortens){
+                rs.push(shortens[shorten]);
+            }
+            ee.emit('addShorten', rs);
         });
     });
 }
@@ -106,7 +111,7 @@ io.sockets.on('connection', function (socket) {
     });
     function registaEvt (hash){
         console.log('Regista Evento :  ' )
-        socket.emit('alt', {hash: hash});
+        socket.emit('alt', hash);                                                                               //emite lista para browsers
     }   
     socket.emit('conn', { estado: 'Conectado' });
     console.log('Conectado socket ');
