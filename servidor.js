@@ -1,6 +1,7 @@
 var shortens = [{}];
 var count = 0;
-var acess = { 'mauricio@isban.pt' :  '1234', 'alfredo@isban.pt' : '1234'};
+var acess;
+//var acess = { 'mauricio@isban.pt' :  '1234', 'alfredo@isban.pt' : '1234'};
 
 var MAX_SESSION_SECONDS = 60 * 60 * 2;
 
@@ -208,6 +209,42 @@ function generateToken(email) {
 
   return JSON.stringify({ ts: now, email: email, sign: sign });
 }
+
+//*******************************************************************************
+//                                        Cria User
+//*******************************************************************************
+server.post('/register', addUser);
+
+function addUser(req, res) {
+     
+    console.log('Add User');
+    var s = fs.ReadStream('public/users.txt');                                       //lê DB
+    fs.readFile('public/users.txt', function (err, data) {
+        if (err) throw err;
+        acess = JSON.parse(data);
+        
+        var email=req.body.mail;
+        
+        if (!acess[email]) {
+            console.log('Novo user');
+            acess[email] = req.body.pass;
+            console.log(acess);
+            var reg = JSON.stringify(acess);
+            
+            fs.writeFile('public/users.txt', reg, function (err) {                       //escreve DB
+                if (err) throw err;
+                console.log('User Adicionado');
+            });
+        }
+        else {
+            console.log(acess);
+            console.log('User ja registado');
+            return res.send(501, 'Unhable to Register')
+        }
+        res.send(email);    
+        });
+}
+
 
 //**************************************************************************
 
